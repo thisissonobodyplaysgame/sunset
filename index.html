@@ -55,6 +55,19 @@ body {
     transform: scale(1.15);
 }
 
+/* Library icon INSIDE dock (same as apps) */
+.library-app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.library-app img {
+    width: 32px;
+    height: 32px;
+    filter: invert(1);
+}
+
 /* Clock */
 .clock {
     position: absolute;
@@ -65,35 +78,6 @@ body {
     border-radius: 20px;
     text-align: right;
     z-index: 10;
-}
-
-/* Library Button */
-.library-btn {
-    position: absolute;
-    left: 740px;
-    bottom: 40px;
-    width: 74px;
-    height: 74px;
-    border-radius: 20px;
-    background: rgba(20,20,20,0.7);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.2s;
-    z-index: 10;
-}
-
-.library-btn:hover {
-    transform: scale(1.1);
-}
-
-.library-btn img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    filter: invert(1);
 }
 
 /* Fullscreen Library */
@@ -171,14 +155,10 @@ body {
 }
 </style>
 </head>
+
 <body>
 
 <div class="day" id="dayText">MONDAY</div>
-
-<!-- Library button -->
-<div class="library-btn" onclick="toggleLibrary()">
-    <img src="https://static.thenounproject.com/png/5443009-200.png" alt="Library">
-</div>
 
 <!-- Fullscreen Library -->
 <div class="library-overlay" id="libraryOverlay">
@@ -188,7 +168,40 @@ body {
 
     <div class="library-grid" id="libraryGrid">
 
-        <!-- LIBRARY ONLY APPS -->
+<div class="library-item" data-name="Netflix" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://learningaboutmvies.b-cdn.net/')">
+    <div class="library-icon" style="background-image:url('https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15844974/netflixlogo.0.0.1466448626.png?quality=90&strip=all&crop=1.2535702951444,0,97.492859409711,100')"></div>
+    <div class="library-name">Netflix</div>
+</div>
+
+<div class="library-item" data-name="Roblox" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://nowgg.fun%2Fapps%2Fa%2F19900%2Fb.html')">
+    <div class="library-icon" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Roblox_Corporation_2025_logo.svg/960px-Roblox_Corporation_2025_logo.svg.png')"></div>
+    <div class="library-name">Roblox</div>
+</div>
+
+<div class="library-item" data-name="Spotify" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://music.youtube.com/?hl=en')">
+    <div class="library-icon" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Spotify_App_Logo.svg/500px-Spotify_App_Logo.svg.png?_=20210620075506')"></div>
+    <div class="library-name">Spotify</div>
+</div>
+
+<div class="library-item" data-name="PSify" onclick="openApp('https://thisissonobodyplaysgame.github.io/psify')">
+    <div class="library-icon" style="background-image:url('https://static0.thegamerimages.com/wordpress/wp-content/uploads/2020/01/Playstation-logo-1.jpg')"></div>
+    <div class="library-name">PSify</div>
+</div>
+
+<div class="library-item" data-name="GeForce" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://play.geforcenow.com')">
+    <div class="library-icon" style="background-image:url('https://play-lh.googleusercontent.com/_-b_HQXrVyyhZSHj_BoE9u_-cxkcHDH_yLX5rDjJsFMIfsCNQs9F3QP4JvEFcWaSIz0')"></div>
+    <div class="library-name">GeForce</div>
+</div>
+
+<div class="library-item" data-name="TikTok" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://tiktok.com/foryou')">
+    <div class="library-icon" style="background-image:url('https://img.freepik.com/premium-vector/tik-tok-logo_578229-290.jpg?semt=ais_hybrid&w=740&q=80')"></div>
+    <div class="library-name">TikTok</div>
+</div>
+
+<div class="library-item" data-name="ChatGPT" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://chatgpt.com')">
+    <div class="library-icon" style="background-image:url('https://store-images.s-microsoft.com/image/apps.14785.14423064005243201.42399137-369b-40bb-b5be-ac2f079c41bf.b1d6d110-9d93-441f-ac20-2e04fd7dfe3c?h=210')"></div>
+    <div class="library-name">ChatGPT</div>
+</div>
         <div class="library-item" data-name="Discord" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://discord.gg')">
             <div class="library-icon" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoCkY_K9TX2dN21sxK2Np0a2vqnKKHGWP7Ow&amp')"></div>
             <div class="library-name">Discord</div>
@@ -220,13 +233,17 @@ body {
             <div class="library-icon" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/5/51/IMessage_logo.svg')"></div>
             <div class="library-name">Messages</div>
         </div>
-        
 
     </div>
 </div>
 
 <!-- Dock -->
 <div class="dock" id="dock">
+
+    <!-- LIBRARY BUTTON NOW IN DOCK (LEFT OF NETFLIX) -->
+    <div class="app library-app" onclick="toggleLibrary()">
+        <img src="https://static.thenounproject.com/png/5443009-200.png">
+    </div>
 
     <div class="app" data-name="Netflix" data-icon="https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15844974/netflixlogo.0.0.1466448626.png?quality=90&strip=all&crop=1.2535702951444,0,97.492859409711,100" style="background-image:url('https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15844974/netflixlogo.0.0.1466448626.png?quality=90&strip=all&crop=1.2535702951444,0,97.492859409711,100')" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://learningaboutmvies.b-cdn.net/')"></div>
 
@@ -265,27 +282,6 @@ function searchApps() {
     });
 }
 
-function populateLibrary() {
-    const apps = document.querySelectorAll(".dock .app");
-    const grid = document.getElementById("libraryGrid");
-
-    apps.forEach(app => {
-        const item = document.createElement("div");
-        item.className = "library-item";
-        item.dataset.name = app.dataset.name;
-
-        item.innerHTML = `
-            <div class="library-icon" style="background-image:url('${app.dataset.icon}')"></div>
-            <div class="library-name">${app.dataset.name}</div>
-        `;
-
-        item.onclick = () => app.click();
-
-        grid.insertBefore(item, grid.firstChild);
-    });
-}
-
-/* Clock + date */
 function updateClock() {
     const now = new Date();
 
@@ -301,7 +297,6 @@ function updateClock() {
     document.getElementById("dayText").textContent = days[now.getDay()];
 }
 
-populateLibrary();
 setInterval(updateClock, 1000);
 updateClock();
 </script>
