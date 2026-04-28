@@ -189,7 +189,8 @@ body {
         <h2>Settings</h2>
 
         <h3>Panic Key (Schoology redirect)</h3>
-        <input id="panicKey" maxlength="1" placeholder="set key">
+        <h3>(`) is panic key.</h3>
+
 
         <h3>Background</h3>
 
@@ -323,7 +324,7 @@ body {
         
     <div class="app" data-name="ChatGPT" data-icon="https://store-images.s-microsoft.com/image/apps.14785.14423064005243201.42399137-369b-40bb-b5be-ac2f079c41bf.b1d6d110-9d93-441f-ac20-2e04fd7dfe3c?h=210" style="background-image:url('https://store-images.s-microsoft.com/image/apps.14785.14423064005243201.42399137-369b-40bb-b5be-ac2f079c41bf.b1d6d110-9d93-441f-ac20-2e04fd7dfe3c?h=210')" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://chatgpt.com')"></div>
 	<div class="app" onclick="toggleSettings()"
-style="background-image:url('https://cdn-icons-png.flaticon.com/512/3524/3524636.png')"></div>
+style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Settings_%28iOS%29.png/500px-Settings_%28iOS%29.png')"></div>
 
 </div>
 
@@ -365,7 +366,7 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
-let panicKey = "q";
+let panicKey = "`";
 
 function toggleSettings(){
     document.getElementById("settingsOverlay").classList.toggle("open");
