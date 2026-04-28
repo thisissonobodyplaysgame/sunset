@@ -153,9 +153,73 @@ body {
     font-size: 12px;
     margin-top: 6px;
 }
+.settings-overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(15px);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+}
+
+.settings-overlay.open{
+    display:flex;
+}
 </style>
 </head>
+<div class="settings-overlay" id="settingsOverlay"
+     style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+            background:rgba(0,0,0,0.6);
+            justify-content:center;align-items:center;
+            padding:20px;box-sizing:border-box;">
 
+    <div style="background:rgba(20,20,20,0.95);
+                width:90%;
+                max-width:900px;
+                max-height:90vh;
+                overflow-y:auto;
+                padding:25px;
+                border-radius:20px;
+                box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+
+        <button onclick="toggleSettings()">Close</button>
+
+        <h2>Settings</h2>
+
+        <h3>Panic Key (Schoology redirect)</h3>
+        <input id="panicKey" maxlength="1" placeholder="set key">
+
+        <h3>Background</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;">
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://wallpapercave.com/uwp/uwp4960818.jpeg');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://wallpapercave.com/uwp/uwp4960449.jpeg');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://4kwallpapers.com/images/walls/thumbs_3t/25229.jpg');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://4kwallpapers.com/images/walls/thumbs_3t/26035.jpg');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+            <div onclick="setBG(this)"
+                 style="width:100%;height:100px;background:url('https://4kwallpapers.com/images/walls/thumbs_3t/24457.jpg');background-size:cover;background-position:center;border-radius:10px;cursor:pointer;"></div>
+
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
 <body>
 
 <div class="day" id="dayText">MONDAY</div>
@@ -258,6 +322,8 @@ body {
     <div class="app" data-name="TikTok" data-icon="https://img.freepik.com/premium-vector/tik-tok-logo_578229-290.jpg?semt=ais_hybrid&w=740&q=80" style="background-image:url('https://img.freepik.com/premium-vector/tik-tok-logo_578229-290.jpg?semt=ais_hybrid&w=740&q=80')" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://tiktok.com/foryou')"></div>
         
     <div class="app" data-name="ChatGPT" data-icon="https://store-images.s-microsoft.com/image/apps.14785.14423064005243201.42399137-369b-40bb-b5be-ac2f079c41bf.b1d6d110-9d93-441f-ac20-2e04fd7dfe3c?h=210" style="background-image:url('https://store-images.s-microsoft.com/image/apps.14785.14423064005243201.42399137-369b-40bb-b5be-ac2f079c41bf.b1d6d110-9d93-441f-ac20-2e04fd7dfe3c?h=210')" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://chatgpt.com')"></div>
+	<div class="app" onclick="toggleSettings()"
+style="background-image:url('https://cdn-icons-png.flaticon.com/512/3524/3524636.png')"></div>
 
 </div>
 
@@ -299,6 +365,32 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+let panicKey = "q";
+
+function toggleSettings(){
+    document.getElementById("settingsOverlay").classList.toggle("open");
+}
+
+/* panic key */
+document.addEventListener("keydown",(e)=>{
+    if(e.key.toLowerCase() === panicKey){
+        window.location.href = "https://centennial.schoology.com/home";
+    }
+});
+
+/* background switch */
+function setBG(el){
+    document.body.style.backgroundImage = el.style.backgroundImage;
+}
+function toggleSettings() {
+    const overlay = document.getElementById("settingsOverlay");
+
+    if (overlay.style.display === "flex") {
+        overlay.style.display = "none";
+    } else {
+        overlay.style.display = "flex";
+    }
+}
 </script>
 
 </body>
