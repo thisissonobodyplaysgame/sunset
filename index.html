@@ -167,6 +167,29 @@ body {
 .settings-overlay.open{
     display:flex;
 }
+/* Desktop icons */
+.desktop-icon {
+    position: absolute;
+    width: 60px;
+    text-align: center;
+    cursor: grab;
+    z-index: 5;
+}
+
+.desktop-icon .icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+}
+
+.desktop-icon span {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
 </style>
 </head>
 <div class="settings-overlay" id="settingsOverlay"
@@ -305,10 +328,12 @@ body {
 <!-- Dock -->
 <div class="dock" id="dock">
 
-    <!-- LIBRARY BUTTON NOW IN DOCK (LEFT OF NETFLIX) -->
-    <div class="app library-app" onclick="toggleLibrary()">
-        <img src="https://static.thenounproject.com/png/5443009-200.png">
+<div class="app library-app" onclick="toggleLibrary()">
+    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+        <img src="https://static.thenounproject.com/png/5443009-200.png"
+             style="width:32px;height:32px;pointer-events:none;">
     </div>
+</div>
 
     <div class="app" data-name="Netflix" data-icon="https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15844974/netflixlogo.0.0.1466448626.png?quality=90&strip=all&crop=1.2535702951444,0,97.492859409711,100" style="background-image:url('https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/15844974/netflixlogo.0.0.1466448626.png?quality=90&strip=all&crop=1.2535702951444,0,97.492859409711,100')" onclick="openApp('https://learningaboutschoolwork.b-cdn.net/embed.html?url=https://learningaboutmvies.b-cdn.net/')"></div>
 
@@ -331,66 +356,209 @@ style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thum
 <div class="clock" id="clock"></div>
 
 <script>
+/* =========================
+   BASIC APP OPEN
+========================= */
 function openApp(link) {
     window.open(link, "_blank");
 }
 
-function toggleLibrary() {
-    document.getElementById("libraryOverlay").classList.toggle("open");
-}
-
-function searchApps() {
-    let input = document.getElementById("searchApps").value.toLowerCase();
-    let items = document.querySelectorAll(".library-item");
-
-    items.forEach(item => {
-        let name = (item.dataset.name || "").toLowerCase();
-        item.style.display = name.includes(input) ? "block" : "none";
-    });
-}
-
+/* =========================
+   CLOCK
+========================= */
 function updateClock() {
     const now = new Date();
 
-    let time = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    let date = now.toLocaleDateString([], {month:'short', day:'numeric'});
-
     document.getElementById("clock").innerHTML = `
-        ${time}<br>
-        <span style="font-size:12px;">${date}</span>
+        ${now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}<br>
+        <span style="font-size:12px;">
+        ${now.toLocaleDateString([], {month:'short', day:'numeric'})}
+        </span>
     `;
 
-    const days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","TUFF DAY"];
+    const days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
     document.getElementById("dayText").textContent = days[now.getDay()];
 }
-
 setInterval(updateClock, 1000);
 updateClock();
-let panicKey = "`";
 
-function toggleSettings(){
-    document.getElementById("settingsOverlay").classList.toggle("open");
+/* =========================
+   BACKGROUND SWITCH
+========================= */
+function setBG(el){
+    document.body.style.backgroundImage = el.style.backgroundImage;
 }
 
-/* panic key */
+/* =========================
+   SETTINGS TOGGLE
+========================= */
+function toggleSettings() {
+    const overlay = document.getElementById("settingsOverlay");
+    if (!overlay) return;
+
+    overlay.style.display = (overlay.style.display === "flex") ? "none" : "flex";
+}
+
+/* =========================
+   LIBRARY TOGGLE
+========================= */
+function toggleLibrary() {
+    const overlay = document.getElementById("libraryOverlay");
+    if (!overlay) return;
+
+    overlay.classList.toggle("open");
+
+    overlay.style.display = overlay.classList.contains("open")
+        ? "flex"
+        : "none";
+}
+
+/* =========================
+   PANIC KEY
+========================= */
 document.addEventListener("keydown",(e)=>{
-    if(e.key.toLowerCase() === panicKey){
+    if(e.key === "`"){
         window.location.href = "https://centennial.schoology.com/home";
     }
 });
 
-/* background switch */
-function setBG(el){
-    document.body.style.backgroundImage = el.style.backgroundImage;
-}
-function toggleSettings() {
-    const overlay = document.getElementById("settingsOverlay");
+/* =========================
+   DRAG FROM DOCK
+========================= */
+document.querySelectorAll(".dock .app").forEach(app => {
+    app.setAttribute("draggable", true);
+});
 
-    if (overlay.style.display === "flex") {
-        overlay.style.display = "none";
-    } else {
-        overlay.style.display = "flex";
+document.addEventListener("dragstart", e => {
+    const app = e.target.closest(".app");
+    if (!app) return;
+
+    e.dataTransfer.setData("name", app.dataset.name || "");
+    e.dataTransfer.setData("icon", app.dataset.icon || app.style.backgroundImage || "");
+    e.dataTransfer.setData("action", app.getAttribute("onclick") || "");
+});
+
+document.body.addEventListener("dragover", e => e.preventDefault());
+
+document.body.addEventListener("drop", e => {
+    e.preventDefault();
+
+    const name = e.dataTransfer.getData("name");
+    let icon = e.dataTransfer.getData("icon");
+    const action = e.dataTransfer.getData("action");
+
+    if (!name) return;
+
+    if (icon && icon.startsWith("url(")) {
+        icon = icon.slice(4, -1).replace(/"/g, "");
     }
+
+    createDesktopIcon(name, icon, action, e.clientX, e.clientY);
+});
+
+/* =========================
+   CREATE DESKTOP ICON
+========================= */
+function createDesktopIcon(name, icon, action, x, y) {
+    const el = document.createElement("div");
+    el.className = "desktop-icon";
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+
+    el.dataset.name = name;
+    el.dataset.icon = icon;
+    el.dataset.action = action;
+
+    const iconDiv = document.createElement("div");
+    iconDiv.className = "icon";
+    setIconBackground(iconDiv, icon);
+
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    el.appendChild(iconDiv);
+    el.appendChild(label);
+
+    el.ondblclick = () => {
+        if (action) eval(action);
+    };
+
+    document.body.appendChild(el);
+    makeDraggable(el);
+}
+
+/* =========================
+   SAFE ICON HANDLER
+========================= */
+function setIconBackground(el, icon) {
+    if (!icon) return;
+
+    if (icon.startsWith("url(")) {
+        el.style.backgroundImage = icon;
+    } else {
+        el.style.backgroundImage = `url("${icon}")`;
+    }
+
+    el.style.backgroundSize = "cover";
+    el.style.backgroundPosition = "center";
+}
+
+/* =========================
+   DRAG SYSTEM (STABLE + CLEAN)
+========================= */
+function makeDraggable(el) {
+
+    if (
+        el.classList.contains("library-app") ||
+        el.classList.contains("settings-app") ||
+        el.id === "settingsIcon"
+    ) {
+        el.style.pointerEvents = "auto";
+        return;
+    }
+
+    let offsetX = 0;
+    let offsetY = 0;
+
+    const onMouseMove = (e) => {
+        el.style.left = (e.clientX - offsetX) + "px";
+        el.style.top = (e.clientY - offsetY) + "px";
+    };
+
+    const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+
+        el.style.zIndex = 5;
+
+        const dock = document.getElementById("dock");
+        if (!dock) return;
+
+        const d = dock.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+
+        const inDock =
+            r.left < d.right &&
+            r.right > d.left &&
+            r.top < d.bottom &&
+            r.bottom > d.top;
+
+        if (inDock) {
+            el.remove();
+        }
+    };
+
+    el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+
+        el.style.zIndex = 9999;
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+    });
 }
 </script>
 
