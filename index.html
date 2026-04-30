@@ -503,10 +503,21 @@ function createDesktopIcon(name, icon, action, x, y) {
     el.appendChild(iconDiv);
     el.appendChild(label);
 
-    el.ondblclick = () => {
-        if (action) eval(action);
-    };
+let moved = false;
 
+el.addEventListener("mousedown", () => {
+    moved = false;
+});
+
+el.addEventListener("mousemove", () => {
+    moved = true;
+});
+
+el.addEventListener("mouseup", () => {
+    if (!moved && action) {
+        eval(action);
+    }
+});
     document.body.appendChild(el);
     makeDraggable(el);
 }
