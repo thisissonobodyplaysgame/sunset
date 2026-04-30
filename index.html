@@ -214,7 +214,31 @@ body {
         <h3>Panic Key (Schoology redirect)</h3>
         <h3>(`) is panic key.</h3>
 
+<h3>Tab Cloaking</h3>
 
+<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+
+    <button onclick="setCloak('default')" 
+        style="padding:10px;border-radius:10px;border:none;cursor:pointer;">
+        Default
+    </button>
+
+    <button onclick="setCloak('google')" 
+        style="padding:10px;border-radius:10px;border:none;cursor:pointer;">
+        Google Drive
+    </button>
+
+    <button onclick="setCloak('gmail')" 
+        style="padding:10px;border-radius:10px;border:none;cursor:pointer;">
+        Gmail
+    </button>
+
+    <button onclick="setCloak('schoology')" 
+        style="padding:10px;border-radius:10px;border:none;cursor:pointer;">
+        Schoology
+    </button>
+
+</div>
         <h3>Background</h3>
 
         <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;">
@@ -558,6 +582,72 @@ function makeDraggable(el) {
 
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
+    });
+}
+/* =========================
+   TAB CLOAKING SYSTEM
+========================= */
+
+const cloakData = {
+    default: {
+        title: "Sunset OS",
+        icon: "https://cdn-icons-png.flaticon.com/512/25/25694.png"
+    },
+    google: {
+        title: "Google Drive",
+        icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"
+    },
+    gmail: {
+        title: "Gmail",
+        icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"
+    },
+    schoology: {
+        title: "Schoology",
+        icon: "https://asset-cdn.schoology.com/sites/all/themes/schoology_theme/favicon.ico"
+    },
+    roblox: {
+        title: "Roblox",
+        icon: "https://images.rbxcdn.com/076b45a8c5c2b7a1a8fbbd9d7c3c0a66.png"
+    }
+};
+
+function setCloak(mode) {
+    const data = cloakData[mode];
+    if (!data) return;
+
+    // Change tab title
+    document.title = data.title;
+
+    // Change favicon
+    let icon = document.querySelector("link[rel='icon']");
+    if (!icon) {
+        icon = document.createElement("link");
+        icon.rel = "icon";
+        document.head.appendChild(icon);
+    }
+    icon.href = data.icon;
+}
+
+/* Optional: default cloak on load */
+setCloak("default");
+/* =========================
+   APP LIBRARY SEARCH FIX
+========================= */
+
+function searchApps() {
+    const input = document.getElementById("searchApps");
+    const filter = input.value.toLowerCase();
+
+    const apps = document.querySelectorAll(".library-item");
+
+    apps.forEach(app => {
+        const name = (app.getAttribute("data-name") || "").toLowerCase();
+
+        if (name.includes(filter)) {
+            app.style.display = "block";
+        } else {
+            app.style.display = "none";
+        }
     });
 }
 </script>
